@@ -1,6 +1,5 @@
 package org.codejudge.sb.service;
 import org.codejudge.sb.model.Question;
-import org.codejudge.sb.model.Quiz;
 import org.codejudge.sb.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,8 +11,8 @@ public class QuestionService {
     @Autowired
     QuestionRepository questionRepository;
 
-    public void save(Question question) {
-        questionRepository.save(question);
+    public Question save(Question question) {
+        return questionRepository.save(question);
     }
 
     public Question get(Integer id) {

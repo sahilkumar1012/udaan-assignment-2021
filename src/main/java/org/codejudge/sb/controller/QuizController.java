@@ -1,10 +1,15 @@
 package org.codejudge.sb.controller;
 
 import io.swagger.annotations.ApiOperation;
+import org.codejudge.sb.model.FailureResponse;
 import org.codejudge.sb.model.Quiz;
 import org.codejudge.sb.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.xml.ws.Response;
 
 
 @RestController
@@ -15,14 +20,29 @@ public class QuizController {
     QuizService quizService;
 
     @PostMapping("/api/quiz/")
-    public Quiz createQuiz(@RequestBody Quiz quiz){
-        quizService.createQuiz(quiz);
-        return quiz;
+    public ResponseEntity createQuiz(@RequestBody Quiz quiz){
+        Quiz createdQuiz = quizService.createQuiz(quiz);
+        if(createdQuiz!=null){
+            return new ResponseEntity<Quiz>(createdQuiz, HttpStatus.CREATED);
+        }
+        FailureResponse failureResponse = new FailureResponse("failure", "unable to create object");
+        return new ResponseEntity<FailureResponse>(failureResponse,HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/api/quiz/{quiz_id}")
-    public Quiz getQuiz(@PathVariable("quiz_id") Integer id){
-        return quizService.get(id);
+    public ResponseEntity getQuiz(@PathVariable("quiz_id") Integer id){
+        try {
+            Quiz requestedQuiz = quizService.get(id);
+            if (requestedQuiz != null) {
+                return new ResponseEntity<Quiz>(requestedQuiz, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<String>("{}",HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            FailureResponse failureResponse = new FailureResponse("failure", "unable to create object");
+            return new ResponseEntity<FailureResponse>(failureResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
 

@@ -16,9 +16,9 @@ public class QuizService {
     QuizRepository quizRepository;
 
 
-    public void createQuiz(Quiz quiz) {
+    public Quiz createQuiz(Quiz quiz) {
         log.info("create Quiz" + quiz);
-        quizRepository.save(quiz);
+        return quizRepository.save(quiz);
     }
 
     public Quiz get(Integer id) {
